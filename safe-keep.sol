@@ -91,21 +91,21 @@ contract SafeKeep is Owner {
   struct keepMsg {
     mapping (address => record[]) keeps;
     mapping (address => mapping (uint256 => uint256))  index_map;
-    mapping (address => mapping (uint256 => record))  records; //存款记录
+    mapping (address => mapping (uint256 => record))  records; 
   }
   keepMsg keepData;
 
   struct depositMsg {
     mapping (address => depositRecord[]) deposits;
     mapping (address => mapping (uint256 => uint256))  index_map;
-    mapping (address => mapping (uint256 => depositRecord))  depositRecords; //抵押记录
+    mapping (address => mapping (uint256 => depositRecord))  depositRecords; 
   }
   depositMsg depositData;
 
-  address public yefi_con; //yefi发币合约地址
-  uint256 public cycle_time; //每周期时间
-  uint256 public cycle_time2; //每周期时间
-  bool public allow_token; //是否允许BNB存款
+  address public yefi_con; 
+  uint256 public cycle_time; 
+  uint256 public cycle_time2; 
+  bool public allow_token; 
 
   event keepe(address indexed user, uint256 indexed starttime, uint256 endtime, address contractaddr, uint256 quantity, uint256 depositquantity, string symbol, bool repeat, uint256 ex_id);
   event withdrawe(address indexed user, uint256 indexed starttime);
