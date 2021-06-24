@@ -1,3 +1,7 @@
+/**
+ *Submitted for verification at BscScan.com on 2021-06-24
+*/
+
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.11 <0.6.12;
 pragma experimental ABIEncoderV2;
@@ -98,14 +102,14 @@ contract SafeKeep is Owner {
   struct depositMsg {
     mapping (address => depositRecord[]) deposits;
     mapping (address => mapping (uint256 => uint256))  index_map;
-    mapping (address => mapping (uint256 => depositRecord))  depositRecords; 
+    mapping (address => mapping (uint256 => depositRecord))  depositRecords;
   }
   depositMsg depositData;
 
   address public yefi_con; 
   uint256 public cycle_time; 
   uint256 public cycle_time2; 
-  bool public allow_token; 
+  bool public allow_token;
 
   event keepe(address indexed user, uint256 indexed starttime, uint256 endtime, address contractaddr, uint256 quantity, uint256 depositquantity, string symbol, bool repeat, uint256 ex_id);
   event withdrawe(address indexed user, uint256 indexed starttime);
@@ -120,24 +124,11 @@ contract SafeKeep is Owner {
   function accept() public payable {
   }
 
-  function transferToken(address _contractaddr, address _to, uint256 _value) public isOwner {
-    safeTransfer(_contractaddr, _to, _value);
-  }
-
-  function transfer(address payable _to, uint256 _value) public isOwner {
-    _to.transfer(_value);
-  }
-
   function setCycleTime(uint256 _time, uint256 _cycleTime2) public isOwner {
     require(_time > 0, 'time must be greater than 0');
     require(_cycleTime2 > 0, 'time must be greater than 0');
     cycle_time = _time;
     cycle_time2 = _cycleTime2;
-  }
-
-  function setYefiCon(address _yefi) public isOwner {
-    require(_yefi != address(0), 'wrong yefi_con');
-    yefi_con = _yefi;
   }
 
   function setAllowToken(bool _allow) public isOwner {
@@ -214,6 +205,9 @@ contract SafeKeep is Owner {
     safeTransferFrom(yefi_con, msg.sender, address(this), _depositValue);
 
     uint256 now_time = now;
+    while (keepData.records[msg.sender][now_time].starttime > 0) {
+        now_time += 1;
+    }
 
     uint256 cycleTime;
     if (_keepType == 1) {
@@ -239,6 +233,9 @@ contract SafeKeep is Owner {
     safeTransferFrom(yefi_con, msg.sender, address(this), _depositValue);
 
     uint256 now_time = now;
+    while (keepData.records[msg.sender][now_time].starttime > 0) {
+        now_time += 1;
+    }
 
     uint256 cycleTime;
     if (_keepType == 1) {
