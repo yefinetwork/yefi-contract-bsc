@@ -3,10 +3,6 @@
 */
 
 /**
- *Submitted for verification at BscScan.com on 2021-06-25
-*/
-
-/**
  *Submitted for verification at BscScan.com on 2021-06-24
 */
 
@@ -267,6 +263,7 @@ contract SafeKeep is Owner {
     require(!keepData.records[msg.sender][_starttime].repeat, 'cannot withdraw when repeat is open');
     require(now > keepData.records[msg.sender][_starttime].endtime, 'It is not due and cannot be retrieved');
 
+    address tokenContract = keepData.records[msg.sender][_starttime].contractaddr;
     uint256 tokenValue = keepData.records[msg.sender][_starttime].quantity;
     uint256 yefiValue = depositData.depositRecords[msg.sender][_starttime].quantity;
 
@@ -294,7 +291,7 @@ contract SafeKeep is Owner {
     }
     delete depositData.depositRecords[msg.sender][_starttime];
     
-    safeTransfer(keepData.records[msg.sender][_starttime].contractaddr, msg.sender, tokenValue);
+    safeTransfer(tokenContract, msg.sender, tokenValue);
     safeTransfer(yefi_con, msg.sender, yefiValue);
 
     emit withdrawe(msg.sender, _starttime);
