@@ -3,7 +3,7 @@
 */
 
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.11 <0.6.12;
+pragma solidity 0.6.11;
 pragma experimental ABIEncoderV2;
 
 abstract contract ERC20Token {
@@ -259,7 +259,7 @@ contract SafeKeep is Owner {
     require(!keepData.records[msg.sender][_starttime].repeat, 'cannot withdraw when repeat is open');
     require(now > keepData.records[msg.sender][_starttime].endtime, 'It is not due and cannot be retrieved');
 
-    safeTransfer(keepData.records[msg.sender][_starttime].contractaddr, msg.sender, keepData.records[msg.sender][_starttime].quantity);
+    
 
     uint256 keyIndex = keepData.index_map[msg.sender][_starttime];
     if (keyIndex < keepData.keeps[msg.sender].length - 1) {
@@ -273,8 +273,6 @@ contract SafeKeep is Owner {
     }
     delete keepData.records[msg.sender][_starttime];
 
-    safeTransfer(yefi_con, msg.sender, depositData.depositRecords[msg.sender][_starttime].quantity);
-
     keyIndex = depositData.index_map[msg.sender][_starttime];
     if (keyIndex < depositData.deposits[msg.sender].length - 1) {
       uint256 lastStartTime = depositData.deposits[msg.sender][depositData.deposits[msg.sender].length - 1].starttime;
@@ -286,6 +284,9 @@ contract SafeKeep is Owner {
       delete depositData.index_map[msg.sender][_starttime];
     }
     delete depositData.depositRecords[msg.sender][_starttime];
+    
+    safeTransfer(keepData.records[msg.sender][_starttime].contractaddr, msg.sender, keepData.records[msg.sender][_starttime].quantity);
+    safeTransfer(yefi_con, msg.sender, depositData.depositRecords[msg.sender][_starttime].quantity);
 
     emit withdrawe(msg.sender, _starttime);
   }
@@ -296,8 +297,6 @@ contract SafeKeep is Owner {
     require(!keepData.records[msg.sender][_starttime].repeat, 'cannot withdraw when repeat is open');
     require(now > keepData.records[msg.sender][_starttime].endtime, 'It is not due and cannot be retrieved');
 
-    msg.sender.transfer(keepData.records[msg.sender][_starttime].quantity);
-
     uint256 keyIndex = keepData.index_map[msg.sender][_starttime];
     if (keyIndex < keepData.keeps[msg.sender].length - 1) {
       uint256 lastStartTime = keepData.keeps[msg.sender][keepData.keeps[msg.sender].length - 1].starttime;
@@ -310,8 +309,6 @@ contract SafeKeep is Owner {
     }
     delete keepData.records[msg.sender][_starttime];
 
-    safeTransfer(yefi_con, msg.sender, depositData.depositRecords[msg.sender][_starttime].quantity);
-
     keyIndex = depositData.index_map[msg.sender][_starttime];
     if (keyIndex < depositData.deposits[msg.sender].length - 1) {
       uint256 lastStartTime = depositData.deposits[msg.sender][depositData.deposits[msg.sender].length - 1].starttime;
@@ -323,6 +320,9 @@ contract SafeKeep is Owner {
       delete depositData.index_map[msg.sender][_starttime];
     }
     delete depositData.depositRecords[msg.sender][_starttime];
+    
+    msg.sender.transfer(keepData.records[msg.sender][_starttime].quantity);
+    safeTransfer(yefi_con, msg.sender, depositData.depositRecords[msg.sender][_starttime].quantity);
 
     emit withdrawe(msg.sender, _starttime);
   }
