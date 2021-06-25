@@ -1,4 +1,12 @@
 /**
+ *Submitted for verification at BscScan.com on 2021-06-25
+*/
+
+/**
+ *Submitted for verification at BscScan.com on 2021-06-25
+*/
+
+/**
  *Submitted for verification at BscScan.com on 2021-06-24
 */
 
@@ -259,7 +267,8 @@ contract SafeKeep is Owner {
     require(!keepData.records[msg.sender][_starttime].repeat, 'cannot withdraw when repeat is open');
     require(now > keepData.records[msg.sender][_starttime].endtime, 'It is not due and cannot be retrieved');
 
-    
+    uint256 tokenValue = keepData.records[msg.sender][_starttime].quantity;
+    uint256 yefiValue = depositData.depositRecords[msg.sender][_starttime].quantity;
 
     uint256 keyIndex = keepData.index_map[msg.sender][_starttime];
     if (keyIndex < keepData.keeps[msg.sender].length - 1) {
@@ -285,8 +294,8 @@ contract SafeKeep is Owner {
     }
     delete depositData.depositRecords[msg.sender][_starttime];
     
-    safeTransfer(keepData.records[msg.sender][_starttime].contractaddr, msg.sender, keepData.records[msg.sender][_starttime].quantity);
-    safeTransfer(yefi_con, msg.sender, depositData.depositRecords[msg.sender][_starttime].quantity);
+    safeTransfer(keepData.records[msg.sender][_starttime].contractaddr, msg.sender, tokenValue);
+    safeTransfer(yefi_con, msg.sender, yefiValue);
 
     emit withdrawe(msg.sender, _starttime);
   }
@@ -296,6 +305,9 @@ contract SafeKeep is Owner {
     require(depositData.depositRecords[msg.sender][_starttime].starttime > 0, 'depositRecord of the starttime is not exists');
     require(!keepData.records[msg.sender][_starttime].repeat, 'cannot withdraw when repeat is open');
     require(now > keepData.records[msg.sender][_starttime].endtime, 'It is not due and cannot be retrieved');
+    
+    uint256 tokenValue = keepData.records[msg.sender][_starttime].quantity;
+    uint256 yefiValue = depositData.depositRecords[msg.sender][_starttime].quantity;
 
     uint256 keyIndex = keepData.index_map[msg.sender][_starttime];
     if (keyIndex < keepData.keeps[msg.sender].length - 1) {
@@ -321,8 +333,8 @@ contract SafeKeep is Owner {
     }
     delete depositData.depositRecords[msg.sender][_starttime];
     
-    msg.sender.transfer(keepData.records[msg.sender][_starttime].quantity);
-    safeTransfer(yefi_con, msg.sender, depositData.depositRecords[msg.sender][_starttime].quantity);
+    msg.sender.transfer(tokenValue);
+    safeTransfer(yefi_con, msg.sender, yefiValue);
 
     emit withdrawe(msg.sender, _starttime);
   }
